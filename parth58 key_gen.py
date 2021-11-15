@@ -2,9 +2,9 @@
 This is my python reimplementation of Parth58's Key_gen.exe
 I'm using it to make the crackme challenge easier
 
-
-
-on to solving the challenge
+*****************************************
+MATH THAT HELPED ME SOLVE THE CHALLENGE
+*****************************************
 find the username that creates the password "AFMWAFPE"
 edit: username (soln) must also be in all caps
 
@@ -37,6 +37,7 @@ The process repeats from there
 
 Got tired of doing the math and made a gen_usr function
 """
+# this function is the re-implementation of keygen.exe
 def gen_password(usr_input):
     password = 'ABCDEFGH'
     usr_len = len(usr_input)
@@ -68,9 +69,12 @@ def gen_password(usr_input):
         # password[i] = AL
         password = password[:i] + chr(AL) + password[i+1:]
 
-    print('User {} generates password {}'.format(usr_input, password))
+    # print('User {} generates password {}'.format(usr_input, password))
     return password
 
+# this is my reverse engineering of the algorithm,
+# so that you can find the username that generates
+# an arbitrary 8-char password
 def gen_usr(str_len=8, password='AFMWAFPE'):
     cap_alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' # needed for later calculations
     username = [] # store output here
@@ -80,6 +84,10 @@ def gen_usr(str_len=8, password='AFMWAFPE'):
         if i == 0:
             # special case for first char
             needed_remainder = ord(password[0]) - 0x41
+            
+            # this error was hard to find but the math for first char needs to subtract
+            # the remaineder instead of adding it
+            needed_remainder = -1 * needed_remainder
             operand = 0x7a
         else:
             # all remaining chars handled the same
@@ -108,15 +116,24 @@ def gen_usr(str_len=8, password='AFMWAFPE'):
 
     # output and close
     username = ''.join(username)
-    print('Username to generate password {} would be {}'.format(password, username))
+    # print('Username to generate password {} would be {}'.format(password, username))
     return username
 
+"""
 # solve the challenge
 usr = gen_usr(str_len=8, password='AFMWAFPE')
 
 # check that this user creates that password
 pw = gen_password(usr)
+"""
 
-print('debug')
+# console usage
+password = input("What password are you trying to solve? ")
+assert len(password)==8, 'This script only works on passwords of length 8!'
+username = gen_usr(password=password)
+double_check_pass = gen_password(username)
+assert double_check_pass==password, 'There was some error in the solving! {} generates {}, but it should generate {}'.format(username, double_check_pass, password)
+print('The username that generates {} is {}'.format(password, username))
+
 
 
