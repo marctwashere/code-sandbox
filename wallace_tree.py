@@ -1,6 +1,7 @@
-# 8x8 wallace tree, see partial products and all outputs
-from pydoc import tempfilepager
-
+#### 8x8 wallace tree, see partial products and all outputs
+####
+####
+####
 
 def CarrySaveAdder(x: str, y: str, z: str) -> tuple[str, str]:
     # get lengths
@@ -34,7 +35,7 @@ def CarrySaveAdder(x: str, y: str, z: str) -> tuple[str, str]:
         temp = a + b + c
 
         # prepend correct outputs
-        if tempfilepager==3:
+        if temp==3:
             sum.insert(0, '1')
             sum.insert(0, '1')
         elif temp==2:
@@ -60,9 +61,38 @@ def CarrySaveAdder(x: str, y: str, z: str) -> tuple[str, str]:
 
     return sum_str, carry_str
         
+def ParallelAdder(x: str, y: str) -> str:
+    pass
+
 # drive code
 if __name__ == '__main__':
+    # x = '11010111'
+    # y = '110101110'
+    # z = '0000000000'
+    # CarrySaveAdder(x, y, z)
+
+    #### 8 x 8 wallace tree
     x = '11010111'
-    y = '110101110'
-    z = '0000000000'
-    CarrySaveAdder(x, y, z)
+    y = '10001011'
+
+    # get partial products
+    prods = []
+    for i in reversed(range(8)):
+        if y[i] == '0':
+            prods.append('0'*8+'0'*(7-i))
+        else:
+            prods.append(x+'0'*(7-i))
+    print("Got partial products:")
+    print(prods)
+
+    # use 8x8 carry-save adder with parallelism
+    s0, c0 = CarrySaveAdder(prods[0], prods[1], prods[2])
+    s0, c0 = CarrySaveAdder(s0, c0, prods[7])
+
+    s1, c1 = CarrySaveAdder(prods[3], prods[4], prods[5])
+    s1, c1 = CarrySaveAdder(s1, c1, prods[6])
+    
+    s0, c0 = CarrySaveAdder(s0, c0, c1)
+    s0, c0 = CarrySaveAdder(s0, c0, s1)
+
+    final = ParallelAdder(s0, c0)
