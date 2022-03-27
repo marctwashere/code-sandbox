@@ -37,7 +37,7 @@ def CarrySaveAdder(x: str, y: str, z: str) -> tuple[str, str]:
         # prepend correct outputs
         if temp==3:
             sum.insert(0, '1')
-            sum.insert(0, '1')
+            carry.insert(0, '1')
         elif temp==2:
             sum.insert(0, '0')
             carry.insert(0, '1')
@@ -52,15 +52,35 @@ def CarrySaveAdder(x: str, y: str, z: str) -> tuple[str, str]:
     carry.append('0')
 
     # prepare results
-    sum_str = ''.join(sum)
-    carry_str = ''.join(carry)
+    # FIXME this code block should be its own function
+    sum_str = ''
+    j = 0
+    for i in reversed(range(len(sum))):
+        j += 1
+        sum_str = sum[i] + sum_str
+        if j % 4 == 0:
+            sum_str = ' ' + sum_str
+
+    carry_str = ''
+    j = 0
+    for i in reversed(range(len(carry))):
+        j += 1
+        carry_str = carry[i] + carry_str
+        if j % 4 == 0:
+            carry_str = ' ' + carry_str
 
     # print results
     print('S: {}'.format(sum_str))
     print('C: {}'.format(carry_str))
+    print()
+
+    # remove spaces
+    sum_str = sum_str.replace(' ', '')
+    carry_str = carry_str.replace(' ', '')
 
     return sum_str, carry_str
         
+# FIXME this isn't implemented
 def ParallelAdder(x: str, y: str) -> str:
     pass
 
@@ -95,4 +115,6 @@ if __name__ == '__main__':
     s0, c0 = CarrySaveAdder(s0, c0, c1)
     s0, c0 = CarrySaveAdder(s0, c0, s1)
 
+    # final will never come bc i need to implement para adder
+    # still, simply adding the final s0, c0 will give you the proper result
     final = ParallelAdder(s0, c0)
