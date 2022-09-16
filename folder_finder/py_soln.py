@@ -1,16 +1,22 @@
 import os
 import shutil
 
+# USER PARAMETERS edit these MUST HAVE '/' not '\'
+top_level = 'C:/Users/matv2/OneDrive/Desktop/test_top_level' # the path to the top-level directory for searching
+list_loc = 'C:/Users/matv2/OneDrive/Desktop/find_these.txt' # path to text file containing search terms
+output_dir = 'C:/Users/matv2/OneDrive/Desktop/test_output' # directory where you want files saved
+# END USER PARAMETERS
+
 # helper vars for logging
 missed = []
 
 # create targets directory
-if os.path.exists('targets'):
-    shutil.rmtree('targets')
-    os.mkdir('targets')
+if os.path.exists('{}/targets'.format(output_dir)):
+    shutil.rmtree('{}/targets'.format(output_dir))
+    os.mkdir('{}/targets'.format(output_dir))
 
 # get the list of folders that need to be found
-with open('find_these.txt', 'r') as file:
+with open(list_loc, 'r') as file:
     to_find = file.readlines()
 
 # clean up the newline characters
@@ -24,7 +30,7 @@ for find_me in to_find:
     found = False
 
     # reset directory to root folder
-    os.chdir('.')
+    os.chdir(top_level)
 
     # loop over every sub-folder (one level deep)
     for sub in os.listdir():
@@ -41,7 +47,7 @@ for find_me in to_find:
             print('FOUND IT')
 
             # copy the folder to "targets"
-            shutil.copytree(find_me, '../targets/{}'.format(find_me))
+            shutil.copytree(find_me, '{}/targets/{}'.format(output_dir, find_me))
 
             # flag for logging
             found = True
@@ -53,7 +59,7 @@ for find_me in to_find:
     if not found: missed.append(find_me)
 
 # save missed to file
-with open('missed.txt', 'w') as file:
+with open('{}/missed.txt'.format(output_dir), 'w') as file:
     for miss in missed:
         file.write(miss)
         file.write('\n') 
