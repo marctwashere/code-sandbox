@@ -43,14 +43,15 @@ for find_me in to_find:
         print('Looking in {}'.format(sub))
 
         # look for the target folder
-        if find_me in os.listdir():
-            print('FOUND IT')
+        for potential in os.listdir():
+            if find_me.lower() in potential.lower():
+                print('FOUND IT')
 
-            # copy the folder to "targets"
-            shutil.copytree(find_me, '{}/targets/{}'.format(output_dir, find_me))
+                # copy the folder to "targets"
+                shutil.copytree(potential, '{}/targets/{}'.format(output_dir, find_me))
 
-            # flag for logging
-            found = True
+                # flag for logging
+                found = True
 
         # step out of the sub-folder
         os.chdir('..')
