@@ -67,5 +67,5 @@ with open('{}/missed.txt'.format(output_dir), 'w') as file:
 # give stats to user
 print('Found {} targets'.format(len(to_find) - len(missed)))
 print('Missed {} targets'.format(len(missed)))
-print('A list of missed targets can be found at missed.txt')
+print('A list of missed targets can be found at OUTPUT_DIR/missed.txt')
 input('Press enter to close...')
